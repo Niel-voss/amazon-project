@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Todo List Web</title>
+    <h3>Todo List</h3>
+  </head>
+
+  <body>
+    <input placeholder="Enter list here" class="js-input">
+    <input type="date" class="js-date">
+    <button class="add-btn">Add</button>
+
+    <div class="list"></div>
+
+    <script>
+      class Cart {
+        constructor() {
+          this.todoList = JSON.parse(localStorage.getItem('todoList')) || [];
+
+          document.querySelector('.add-btn').addEventListener('click', () => {
+            this.getInput();
+            this.renderList();
+          });
+
+          this.renderList(); // render saved tasks on load
+        }
+
+        getInput() {
+          const input = document.querySelector('.js-input');
+          const inputPrime = input.value.trim();
+
+          const date = document.querySelector('.js-date');
+          const datePrime = date.value;
+
+          if (!inputPrime) return; // prevent empty inputs
+
+          this.todoList.push({ inputPrime, datePrime });
+          this.saveStorage();
+
+          input.value = ''; // clear field after adding
+        }
+
+        renderList() {
+          let list = '';
+
+          this.todoList.forEach((item, i) => {
+            const { inputPrime, datePrime } = item;
+            list += `
+              <div>
+                ${inputPrime} ${datePrime}
+                <button class="delete-btn" data-index="${i}">Delete</button>
+              </div>
+            `;
+          });
+
+          document.querySelector('.list').innerHTML = list;
+
+          document.querySelectorAll('.delete-btn').forEach((button) => {
+            button.addEventListener('click', (e) => {
+              const index = e.target.dataset.index;
+              this.todoList.splice(index, 1);
+              this.saveStorage();
+              this.renderList();
+            });
+          });
+        }
+
+        saveStorage() {
+          localStorage.setItem('todoList', JSON.stringify(this.todoList));
+        }
+      }
+
+      // create the Cart instance
+      const todoApp = new Cart();
+    </script>
+  </body>
+</html>

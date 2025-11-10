@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>todo list web
+    </title>
+    <h3>Todo List
+    </h3>
+  </head>
+
+  <body>
+
+
+    <input placeholder="enter list here" class="js-input">
+
+    <input type="date" class="js-date">
+
+    <button class="add-btn">Add</button>
+
+    <div class="list"></div>
+
+
+    <script>
+
+
+class Cart {
+
+  //constructor is used to run code that u want the web to run first before any other function or object or method
+
+  // constructor is also like A function and it can carry parameters too
+      constructor(){
+        
+
+  this.todoList =  JSON.parse(localStorage.getItem('todoList')) || [] ;
+              
+      document.querySelector('.add-btn').addEventListener('click',  () => {
+      this.getInput();
+        this.renderList()
+      })  
+
+      };
+   
+    getInput(){
+        const input = document.querySelector('.js-input')  
+        const inputPrime = input.value;
+
+        const date = document.querySelector('.js-date')
+        const datePrime = date.value;
+
+        
+          input.value = '';
+          date.value = '';
+          if (!inputPrime || !datePrime) return; // prevent empty inputs
+
+
+        this.todoList.push({
+           inputPrime, 
+         datePrime})
+          this.saveStorage()
+
+      };
+
+        
+      renderList(){
+
+        
+        let list = '';
+
+        this.todoList.forEach((itemsObject, i) => {
+          const { inputPrime, datePrime } = itemsObject
+          const  htmlCode = `<div>${inputPrime} ${datePrime} <button class="delete-btn" data-index="${i}">delete</button></div>`
+
+          list += htmlCode
+         
+        })
+
+
+        document.querySelector('.list').innerHTML = list
+
+            document.querySelectorAll('.delete-btn').forEach((button) => {
+        button.addEventListener('click', (e) => {
+          const index = e.target.dataset.index
+         this.todoList.splice(index, 1)
+         this.saveStorage()
+          this.renderList()
+        })
+      })
+
+      };
+
+        saveStorage() {
+          localStorage.setItem('todoList', JSON.stringify(this.todoList));
+        }
+
+
+    }
+
+
+    const todoApp = new Cart()
+//dont forget to always call ur class its like a function 
+
+
+//extras: in order not to change the parameter of a local storage u can just prefix it wiith the hashtag inside the class (to make it private) for instance #localStorageKey
+
+
+    </script>
+  </body>
+</html>
